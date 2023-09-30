@@ -1,2 +1,2 @@
-## Chuong trinh danh cho nhung loser
-## Hoc ve microservice
+## Project to learning Microservice
+## Implement in .NET Core 6
