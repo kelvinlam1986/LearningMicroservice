@@ -25,7 +25,6 @@ namespace Infrastructure.Messages
 
         public void SendMessage<T>(T message)
         {
-            var hostName = _configuration.GetValue<string>("")
             var connectionFactory = new ConnectionFactory
             {
                 HostName = "localhost",

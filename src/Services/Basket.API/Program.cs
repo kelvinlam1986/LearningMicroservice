@@ -13,6 +13,7 @@ try
     builder.Services.AddServiceConfiguration(builder.Configuration);
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     builder.Services.ConfigureService();
+    builder.Services.ConfigureHttpClientService();
     builder.Services.ConfigureRedis(builder.Configuration);
    // builder.Services.ConfigureGrpcService();
     builder.Services.Configure<RouteOptions>(options =>

@@ -2,10 +2,12 @@
 using Basket.API.DTO;
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
 using EventBus.Message.IntegrationEvents.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Shared.DTO.Baskets;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 
@@ -18,7 +20,7 @@ namespace Basket.API.Controllers
         private readonly IBasketRepository _repository;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMapper _mapper;
-
+        
         public BasketsController(
             IBasketRepository repository,
             IPublishEndpoint publishEndpoint,
@@ -30,14 +32,16 @@ namespace Basket.API.Controllers
         }
 
         [HttpGet("{username}", Name = "GetBasket")]
-        public async Task<IActionResult> GetCartByUsername([Required] string username)
+        public async Task<ActionResult<CartDto>> GetCartByUsername([Required] string username)
         {
             var cart = await _repository.GetBasketByUsername(username);
-            return Ok(cart == null ? new Cart() : cart);
+            var result = _mapper.Map<CartDto>(cart);
+
+            return Ok(result == null ? new CartDto() : result);
         }
 
         [HttpPost(Name = "UpdateBasket")]
-        public async Task<IActionResult> UpdateCart([FromBody] Cart cart)
+        public async Task<ActionResult<CartDto>> UpdateCart([FromBody] CartDto model)
         {
             //foreach (var item in cart.Items)
             //{
@@ -51,7 +55,10 @@ namespace Basket.API.Controllers
                 SlidingExpiration = TimeSpan.FromMinutes(5)
             };
 
-            var result = await _repository.UpdateBasket(cart, options);
+            var cart = _mapper.Map<Cart>(model);
+            var updatedCart = await _repository.UpdateBasket(cart, options);
+            var result = _mapper.Map<CartDto>(updatedCart);
+
             return Ok(result);
         }
 

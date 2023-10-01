@@ -1,6 +1,8 @@
 ﻿using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services;
+using Basket.API.Services.Interfaces;
 using Contracts.Common.Interfaces;
 using EventBus.Message.IntegrationEvents.Intefaces;
 using Grpc.Net.Client;
@@ -31,13 +33,24 @@ namespace Basket.API.Extensions
             .Get<GrpcSettings>();
             services.AddSingleton(grpcSetting);
 
+            var backgroundJobSettings = configuration.GetSection(nameof(BackgroundJobSettings))
+                .Get<BackgroundJobSettings>();
+            services.AddSingleton(backgroundJobSettings);
+
+
             return services;
         }
 
         public static IServiceCollection ConfigureService(this IServiceCollection services)
         {
           return  services.AddScoped<IBasketRepository, BasketRepository>()
-                .AddTransient<ISerializeService, SerializeService>();
+                .AddTransient<ISerializeService, SerializeService>()
+                .AddTransient<IEmailTemplateService, BasketEmailTemplateService>();
+        }
+
+        public static void ConfigureHttpClientService(this IServiceCollection services)
+        {
+            services.AddHttpClient<BackgroundJobHttpService>();
         }
 
         public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
