@@ -25,6 +25,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
         public async Task<ApiResult<long>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var order = _mapper.Map<Order>(request);
+            order.DocumentNo = Guid.NewGuid().ToString();
             var orderId = await _orderRepository.CreateAsync(order);
             order.AddedOrder();
             await _orderRepository.SaveChangesAsync();

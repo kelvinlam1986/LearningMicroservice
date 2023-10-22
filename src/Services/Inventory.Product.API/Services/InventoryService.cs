@@ -20,6 +20,12 @@ namespace Inventory.Product.API.Services
             _mapper = mapper;
         }
 
+        public async Task DeleteByDocumentNoAsync(string documentNo)
+        {
+            FilterDefinition<InventoryEntry> filter = Builders<InventoryEntry>.Filter.Eq(x => x.DocumentNo, documentNo);
+            await Collection.DeleteOneAsync(filter);
+        }
+
         public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNo(string itemNo)
         {
             var entities = await FindAll().Find(x => x.ItemNo == itemNo)
@@ -65,6 +71,22 @@ namespace Inventory.Product.API.Services
                 DocumentNo = model.DocumentNo,
                 Quantity = model.Quantity,
                 DocumentType = model.DocumentType
+            };
+
+            await CreateAsync(entityToAdd);
+            var result = _mapper.Map<InventoryEntryDto>(entityToAdd);
+            return result;
+        }
+
+        public async Task<InventoryEntryDto> SalesItemAsync(string itemNo, SalesProductDto model)
+        {
+            var entityToAdd = new InventoryEntry(ObjectId.GenerateNewId().ToString())
+            {
+                ItemNo = itemNo,
+                ExternalDocumentNo = model.ExternalDocumentNo,
+                Quantity = model.Quantity * -1,
+                DocumentType = model.DocumentType,
+                DocumentNo = model.ExternalDocumentNo
             };
 
             await CreateAsync(entityToAdd);

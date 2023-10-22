@@ -56,6 +56,7 @@ namespace Ordering.Infrastructure.Persistence
                 await _orderContext.Orders.AddRangeAsync(new Domain.Entities.Order
                 {
                     UserName = "kelvinlam",
+                    DocumentNo = Guid.NewGuid().ToString(),
                     EmailAddress = "kelvincoder@gmail.com",
                     FirstName = "Kelvin",
                     LastName = "Lam",

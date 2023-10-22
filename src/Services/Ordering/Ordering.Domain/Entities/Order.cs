@@ -1,7 +1,6 @@
 ﻿using Contracts.Common.Events;
-using Contracts.Domains;
-using Ordering.Domain.Enums;
 using Ordering.Domain.OrderAggregate.Events;
+using Shared.Enums.Order;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,6 +11,11 @@ namespace Ordering.Domain.Entities
         [Required]
         [Column(TypeName = "varchar(50)")]
         public string UserName { get; set; }
+
+        [Required]
+        [Column(TypeName = "varchar(50)")]
+        public string DocumentNo { get; set; }
+
 
         [Column(TypeName = "decimal(10,2)")]
         public decimal TotalPrice { get; set; }

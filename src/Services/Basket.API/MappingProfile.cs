@@ -10,7 +10,7 @@ namespace Basket.API
     {
         public MappingProfile() 
         {
-            CreateMap<BasketCheckoutDto, BasketCheckoutEvent>();
+            CreateMap<Basket.API.DTO.BasketCheckoutDto, BasketCheckoutEvent>();
             CreateMap<CartDto, Cart>().ReverseMap();
             CreateMap<CartItemDto, CartItem>().ReverseMap();
         }

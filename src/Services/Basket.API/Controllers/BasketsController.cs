@@ -73,7 +73,7 @@ namespace Basket.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> Checkout([FromBody] BasketCheckoutDto baseketCheckout)
+        public async Task<IActionResult> Checkout([FromBody] Basket.API.DTO.BasketCheckoutDto baseketCheckout)
         {
             var basket = await _repository.GetBasketByUsername(baseketCheckout.UserName);
             if (basket == null)

@@ -3,6 +3,7 @@ using EventBus.Message.IntegrationEvents.Events;
 using MediatR;
 using Ordering.Application.Common.Mappings;
 using Ordering.Domain.Entities;
+using Shared.DTO.Order;
 using Shared.SeedWork;
 
 namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
@@ -19,6 +20,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
 
         public void Mapping(Profile profile)
         {
+            profile.CreateMap<CreateOrderDto, CreateOrderCommand>();
             profile.CreateMap<CreateOrderCommand, Order>();
             profile.CreateMap<BasketCheckoutEvent, CreateOrderCommand>();
         }

@@ -69,7 +69,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inventory.Grpc", "src\Servi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ScheduledJob", "ScheduledJob", "{ABA5CE9C-B332-4378-94F0-7149BD32C0E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hangfire.API", "src\Services\ScheduledJob\Hangfire.API\Hangfire.API.csproj", "{FF684075-CA2F-4352-B9A7-BA4B603E66AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hangfire.API", "src\Services\ScheduledJob\Hangfire.API\Hangfire.API.csproj", "{FF684075-CA2F-4352-B9A7-BA4B603E66AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Saga.Orchestrator", "Saga.Orchestrator", "{B250A9D5-0122-45D0-B5B7-9FDECF0898FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saga.Orchestrator", "src\Saga.Orchestrator\Saga.Orchestrator\Saga.Orchestrator.csproj", "{16B7FC26-0BE5-487C-A667-155A5115C4A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +153,10 @@ Global
 		{FF684075-CA2F-4352-B9A7-BA4B603E66AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF684075-CA2F-4352-B9A7-BA4B603E66AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF684075-CA2F-4352-B9A7-BA4B603E66AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16B7FC26-0BE5-487C-A667-155A5115C4A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16B7FC26-0BE5-487C-A667-155A5115C4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16B7FC26-0BE5-487C-A667-155A5115C4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16B7FC26-0BE5-487C-A667-155A5115C4A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,6 +191,8 @@ Global
 		{5212BAC7-9B5B-4EC2-9D66-822569D031DF} = {76F55EB0-BEFC-4C2C-99F1-2F8A4A863FC8}
 		{ABA5CE9C-B332-4378-94F0-7149BD32C0E2} = {290E7C1A-38A9-4C97-BD3B-BF8BC2118751}
 		{FF684075-CA2F-4352-B9A7-BA4B603E66AB} = {ABA5CE9C-B332-4378-94F0-7149BD32C0E2}
+		{B250A9D5-0122-45D0-B5B7-9FDECF0898FF} = {7E3CC2D6-5799-40BA-B04C-85BC14F389F8}
+		{16B7FC26-0BE5-487C-A667-155A5115C4A2} = {B250A9D5-0122-45D0-B5B7-9FDECF0898FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B7C1A95-4DC8-4D73-B84C-2E0995FCB95E}

@@ -1,5 +1,5 @@
 ﻿using Contracts.Common.Events;
-using Ordering.Domain.Enums;
+using Shared.Enums.Order;
 
 namespace Ordering.Domain.OrderAggregate.Events
 {
