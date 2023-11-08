@@ -1,7 +1,10 @@
-﻿using Saga.Orchestrator.HttpRepository;
+﻿using Contracts.Sagas.OrderManager;
+using Saga.Orchestrator.HttpRepository;
 using Saga.Orchestrator.HttpRepository.Intefaces;
+using Saga.Orchestrator.OrderManager;
 using Saga.Orchestrator.Services;
 using Saga.Orchestrator.Services.Interfaces;
+using Shared.DTO.Baskets;
 
 namespace Saga.Orchestrator.Extensions
 {
@@ -9,7 +12,8 @@ namespace Saga.Orchestrator.Extensions
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
-           return  services.AddTransient<ICheckoutService, CheckoutService>();
+           return  services.AddTransient<ICheckoutService, CheckoutService>()
+                        .AddTransient<ISagaOrderManager<BasketCheckoutDto, OrderResponse>, SagaOrderManager>();
         }
 
         public static IServiceCollection ConfigureHttpRepositories(this IServiceCollection services)

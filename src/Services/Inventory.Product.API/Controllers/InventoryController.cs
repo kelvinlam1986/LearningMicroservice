@@ -61,7 +61,7 @@ namespace Inventory.Product.API.Controllers
 
         [HttpPost("sales/{itemNo}")]
         [ProducesResponseType(typeof(InventoryEntryDto), (int)HttpStatusCode.NoContent)]
-        public async Task<ActionResult<InventoryEntryDto>> SalesOrder(
+        public async Task<ActionResult<InventoryEntryDto>> SalesItem(
           [Required] string itemNo,
           [FromBody] SalesProductDto model)
         {
@@ -82,6 +82,16 @@ namespace Inventory.Product.API.Controllers
 
             await _inventoryService.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("sales/order-no/{orderNo}", Name = "SalesOrder")]
+        [ProducesResponseType(typeof(CreatedSalesOrderSuccessDto), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CreatedSalesOrderSuccessDto>> SalesOrder([Required]string orderNo, [FromBody] SalesOrderDto model)
+        {
+            model.OrderNo = orderNo;
+            var documentNo = await _inventoryService.SalesOrderAsync(model);
+            var result = new CreatedSalesOrderSuccessDto(documentNo);
+            return Ok(result);  
         }
     }
 }
