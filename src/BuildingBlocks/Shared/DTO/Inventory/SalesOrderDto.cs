@@ -4,6 +4,6 @@
     {
         public string OrderNo { get; set; }
 
-        public List<SalesItemDto> SalesItems { get; set;; } = new List<SalesItemDto>();
+        public List<SalesItemDto> SalesItems { get; set; } = new List<SalesItemDto>();
     }
 }

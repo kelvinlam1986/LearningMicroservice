@@ -3,9 +3,11 @@
     public enum EOrderAction
     {
         GetBasket,
+        DeleteBasket,
         CreateOrder,
         GetOrder,
+        DeleteOrder,
         UpdateInventory,
-        RollbackInventory
+        DeleteInventory
     }
 }
