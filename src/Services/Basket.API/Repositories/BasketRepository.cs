@@ -49,7 +49,9 @@ namespace Basket.API.Repositories
 
         public async Task<Cart?> GetBasketByUsername(string username)
         {
+            _logger.Information($"BEGIN GetBasketByUsername username={username}");
             var basket = await _redisCacheService.GetStringAsync(username);
+            _logger.Information($"END GetBasketByUsername username={username}");
             return string.IsNullOrEmpty(basket) ? null : _serializeService.Deserialize<Cart>(basket);
         }
 

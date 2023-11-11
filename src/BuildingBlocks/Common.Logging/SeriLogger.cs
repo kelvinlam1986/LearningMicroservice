@@ -17,6 +17,13 @@ namespace Common.Logging
                     .WriteTo.Debug()
                     .WriteTo.Console(
                         outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+                    .WriteTo.Elasticsearch(new Serilog.Sinks.Elasticsearch.ElasticsearchSinkOptions(new Uri(elasticUri))
+                    {
+                        IndexFormat = $"minhlam-{applicationName}-{environmentName}-{DateTime.UtcNow:yyyy-MM}",
+                        AutoRegisterTemplate = true,
+                        NumberOfReplicas = 1,
+                        NumberOfShards = 2
+                    })
                     .Enrich.FromLogContext()
                     .Enrich.WithMachineName()
                     .Enrich.WithProperty("Environment", environmentName)
