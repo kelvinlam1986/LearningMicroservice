@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Common.Logging
@@ -10,6 +11,7 @@ namespace Common.Logging
             {
                 var applicationName = context.HostingEnvironment.ApplicationName?.ToLower().Replace(".", "-");
                 var environmentName = context.HostingEnvironment.EnvironmentName ?? string.Empty;
+                var elasticUri = context.Configuration.GetValue<string>("ElasticConfiguration:Uri");
 
                 configuration
                     .WriteTo.Debug()
