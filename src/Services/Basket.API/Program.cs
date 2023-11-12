@@ -1,6 +1,7 @@
 using Basket.API;
 using Basket.API.Extensions;
 using Common.Logging;
+using HealthChecks.UI.Client;
 using Serilog;
 
 
@@ -29,6 +30,7 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.ConfigureHealthChecks();
 
     var app = builder.Build();
     Log.Information("Starting Basket API up");
@@ -43,6 +45,12 @@ try
     app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
         endpoints.MapDefaultControllerRoute();
     });
 

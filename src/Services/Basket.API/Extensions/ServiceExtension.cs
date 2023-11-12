@@ -52,7 +52,9 @@ namespace Basket.API.Extensions
         public static void ConfigureHttpClientService(this IServiceCollection services)
         {
             services.AddHttpClient<BackgroundJobHttpService>()
-                .UseImmediateHttpRetryPolicy();
+                .UseImmediateHttpRetryPolicy()
+                .UseCircuitBreakerPolicy()
+                .ConfigureTimeoutPolicy();
         }
 
         public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
@@ -97,7 +99,13 @@ namespace Basket.API.Extensions
                 x => x.Address = new Uri(settings.StockUrl));
             services.AddScoped<StockItemGrpcService>();
             return services;
+        }
 
+        public static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var cacheSettings = services.GetOptions<CacheSettings>("CacheSettings");
+            services.AddHealthChecks()
+                .AddRedis(cacheSettings.ConnectionString, name: "Redis Health", failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
         }
     }
 }

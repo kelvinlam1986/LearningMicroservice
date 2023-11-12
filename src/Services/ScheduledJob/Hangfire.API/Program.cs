@@ -1,5 +1,6 @@
 using Common.Logging;
 using Hangfire.API.Extensions;
+using HealthChecks.UI.Client;
 using Infrastructure.ScheduledJobs;
 using Serilog;
 
@@ -24,6 +25,7 @@ try
     builder.Services.AddSwaggerGen();
     builder.Services.AddHangfireService();
     builder.Services.ConfigureServices();
+    builder.Services.ConfigureHealthChecks();
 
     var app = builder.Build();
     Log.Information("Starting Hangfire API up");
@@ -40,6 +42,11 @@ try
 
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
         endpoints.MapDefaultControllerRoute();
     });
 

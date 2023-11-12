@@ -19,7 +19,7 @@ namespace Hangfire.API.Controllers
 
         [HttpPost]
         [Route("send-email-checkout-reminder-order")]
-        public IActionResult SendReminderCheckoutEmail([FromBody] ReminderCheckoutOrderDto model)
+        public async Task<ActionResult> SendReminderCheckoutEmail([FromBody] ReminderCheckoutOrderDto model)
         {
             var jobId = _jobService.SendEmailContent(model.Email, model.Subject, model.EmailContent, model.EnqueueAt);
             return Ok(jobId);

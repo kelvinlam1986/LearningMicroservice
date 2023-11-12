@@ -1,6 +1,7 @@
 using Common.Logging;
 using Contracts.Common.Interfaces;
 using Contracts.Messages;
+using HealthChecks.UI.Client;
 using Infrastructure.Common;
 using Infrastructure.Messages;
 using Ordering.API.Extensions;
@@ -25,6 +26,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.ConfigureMassTransit();
+    builder.Services.ConfigureHealthChecks(builder.Configuration);
     
     var app = builder.Build();
     Log.Information("Starting Ordering API up");
@@ -47,6 +49,12 @@ try
     app.UseExceptionMiddleware();
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
         endpoints.MapDefaultControllerRoute();
     });
 

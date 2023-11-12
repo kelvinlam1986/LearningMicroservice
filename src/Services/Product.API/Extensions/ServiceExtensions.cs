@@ -24,6 +24,11 @@ namespace Product.API.Extensions
                 .Get<JwtSettings>();
             services.AddSingleton(jwtSetings);
 
+
+            var databaseSettings = configuration.GetSection(nameof(DatabaseSettings))
+               .Get<DatabaseSettings>();
+            services.AddSingleton(databaseSettings);
+
             return services;
         }
 
@@ -37,6 +42,7 @@ namespace Product.API.Extensions
             services.AddInfrastructureServices();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             services.AddJwtAuthentication();
+            services.ConfigureHealthChecks();
 
             return services;
         }
@@ -76,8 +82,8 @@ namespace Product.API.Extensions
 
         private static IServiceCollection ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration) 
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
-            var builder = new MySqlConnectionStringBuilder(connectionString);
+            var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+            var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
 
             services.AddDbContext<ProductContext>(m => m.UseMySql(builder.ConnectionString,
                 ServerVersion.AutoDetect(builder.ConnectionString), e =>
@@ -95,6 +101,13 @@ namespace Product.API.Extensions
                 .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
                 .AddScoped<IProductRepository, ProductRepository>();
 
+        }
+
+        private static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+            services.AddHealthChecks()
+                .AddMySql(databaseSettings.ConnectionString, "MySQL Health", Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
         }
     }
 }

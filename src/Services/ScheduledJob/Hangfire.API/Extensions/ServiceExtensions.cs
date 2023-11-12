@@ -3,6 +3,7 @@ using Contracts.Services;
 using Hangfire.API.Services;
 using Hangfire.API.Services.Interfaces;
 using Infrastructure.Configurations;
+using Infrastructure.Extensions;
 using Infrastructure.ScheduledJobs;
 using Infrastructure.Services;
 using Shared.Configurations;
@@ -30,6 +31,13 @@ namespace Hangfire.API.Extensions
             return services.AddTransient<IScheduledJobService, HangfireService>()
                             .AddTransient<IBackgroundJobService, BackgroundJobService>()
                             .AddTransient<ISmtpEmailService, SmtpEmailService>();
+        }
+
+        public static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<HangfireSettings>(nameof(HangfireSettings));
+            services.AddHealthChecks()
+                .AddMongoDb(databaseSettings.Storage.ConnectionString, name: "Mongo Health", failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
         }
     }
 }

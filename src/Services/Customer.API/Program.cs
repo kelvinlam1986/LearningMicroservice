@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Customer.API.Controllers;
 using Customer.API;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);
@@ -24,7 +26,11 @@ try
         .AddScoped(typeof(IRepositoryBaseAsync<,,>), typeof(RepositoryBaseAsync<,,>))
         .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
+
+
     builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    builder.Services.AddHealthChecks()
+            .AddNpgSql(connectionString, name: "Postgres SQL Health", failureStatus: HealthStatus.Degraded);
 
     var app = builder.Build();
     Log.Information("Starting Customer API up");
@@ -39,6 +45,12 @@ try
     app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
         endpoints.MapDefaultControllerRoute();
     });
 

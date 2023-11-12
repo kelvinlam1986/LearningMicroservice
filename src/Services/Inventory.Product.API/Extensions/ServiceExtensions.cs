@@ -42,5 +42,15 @@ namespace Inventory.Product.API.Extensions
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             services.AddScoped<IInventoryService, InventoryService>();
         }
+
+        public static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
+            var databaseName = settings.DatabaseName;
+            var mongoConnectionString = settings.ConnectionString + "/" + databaseName + "?authSource=admin";
+
+            services.AddHealthChecks()
+                .AddMongoDb(mongoConnectionString, name: "Mongo Health", failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
+        }
     }
 }

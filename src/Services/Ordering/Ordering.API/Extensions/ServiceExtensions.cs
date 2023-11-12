@@ -43,5 +43,12 @@ namespace Ordering.API.Extensions
                 });
             });
         }
+
+        public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+            services.AddHealthChecks()
+                .AddSqlServer(connectionString, name: "SQL Server Health", failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
+        }
     }
 }
