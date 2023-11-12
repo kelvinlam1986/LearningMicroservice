@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Basket.API.DTO;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
 using Basket.API.Services.Interfaces;
 using EventBus.Message.IntegrationEvents.Events;
@@ -19,15 +20,18 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly StockItemGrpcService _stockItemGrpcService;
         private readonly IMapper _mapper;
         
         public BasketsController(
             IBasketRepository repository,
             IPublishEndpoint publishEndpoint,
+            StockItemGrpcService stockItemGrpcService,
             IMapper mapper)
         {
             _repository = repository;
             _publishEndpoint = publishEndpoint;
+            _stockItemGrpcService  = stockItemGrpcService;
             _mapper = mapper;
         }
 
@@ -43,11 +47,11 @@ namespace Basket.API.Controllers
         [HttpPost(Name = "UpdateBasket")]
         public async Task<ActionResult<CartDto>> UpdateCart([FromBody] CartDto model)
         {
-            //foreach (var item in cart.Items)
-            //{
-            //    var stock = await _stockItemGrpcService.GetStock(item.ItemNo);
-            //    item.SetAvailableQuantity(stock.Quantity);
-            //}
+            foreach (var item in model.Items)
+            {
+                var stock = await _stockItemGrpcService.GetStock(item.ItemNo);
+                item.SetAvailableQuantity(stock.Quantity);
+            }
 
             var options = new DistributedCacheEntryOptions 
             { 

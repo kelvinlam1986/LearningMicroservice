@@ -9,6 +9,7 @@ using Grpc.Net.Client;
 using Infrastructure.Common;
 using Infrastructure.Configurations;
 using Infrastructure.Extensions;
+using Infrastructure.Policies;
 using Inventory.Grpc.Protos;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -43,14 +44,15 @@ namespace Basket.API.Extensions
 
         public static IServiceCollection ConfigureService(this IServiceCollection services)
         {
-          return  services.AddScoped<IBasketRepository, BasketRepository>()
+            return services.AddScoped<IBasketRepository, BasketRepository>()
                 .AddTransient<ISerializeService, SerializeService>()
                 .AddTransient<IEmailTemplateService, BasketEmailTemplateService>();
         }
 
         public static void ConfigureHttpClientService(this IServiceCollection services)
         {
-            services.AddHttpClient<BackgroundJobHttpService>();
+            services.AddHttpClient<BackgroundJobHttpService>()
+                .UseImmediateHttpRetryPolicy();
         }
 
         public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)

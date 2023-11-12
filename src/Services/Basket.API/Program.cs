@@ -15,7 +15,7 @@ try
     builder.Services.ConfigureService();
     builder.Services.ConfigureHttpClientService();
     builder.Services.ConfigureRedis(builder.Configuration);
-   // builder.Services.ConfigureGrpcService();
+    builder.Services.ConfigureGrpcService();
     builder.Services.Configure<RouteOptions>(options =>
     {
         options.LowercaseUrls = true;
