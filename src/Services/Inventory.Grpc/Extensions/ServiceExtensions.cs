@@ -1,6 +1,10 @@
-﻿using Infrastructure.Extensions;
+﻿using Grpc.Health.V1;
+using Grpc.HealthCheck;
+using Hangfire.API.Extensions;
+using Infrastructure.Extensions;
 using Inventory.Grpc.Repositories;
 using Inventory.Grpc.Repositories.Interfaces;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Driver;
 using Shared.Configurations;
 
@@ -40,6 +44,20 @@ namespace Inventory.Grpc.Extensions
         public static void AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddScoped<IIventoryRepository, InventoryRepository>();
+        }
+
+        public static void ConfigureHealthCheck(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
+            services.AddSingleton<HealthServiceImpl>();
+            services.AddHostedService<StatusService>();
+            services.AddHealthChecks()
+                .AddMongoDb(databaseSettings.ConnectionString,
+                 name: "Inventory MongoDb Health",
+                 failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
+                .AddCheck("Inventory Grpc Health", () => HealthCheckResult.Healthy());
+                
+                
         }
     }
 }

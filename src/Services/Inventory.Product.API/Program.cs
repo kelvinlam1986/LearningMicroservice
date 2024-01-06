@@ -39,7 +39,6 @@ try
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
-
         endpoints.MapDefaultControllerRoute();
     });
 

@@ -1,4 +1,5 @@
 using Common.Logging;
+using HealthChecks.UI.Client;
 using Inventory.Grpc.Extensions;
 using Inventory.Grpc.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -19,6 +20,7 @@ try
     builder.Services.ConfigureMongoDbClient();
     builder.Services.AddInfrastructureServices();
     builder.Services.AddGrpc();
+    builder.Services.ConfigureHealthCheck();
 
     //builder.WebHost.ConfigureKestrel(options =>
     //{
@@ -26,12 +28,20 @@ try
     //});
 
     var app = builder.Build();
-    app.MapGrpcService<InventoryService>();
+    app.UseRouting();
 
-    
-   
-    // Configure the HTTP request pipeline.
-    app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+    app.UseEndpoints(endpoints =>
+    {
+        // health check
+        endpoints.MapHealthChecks("/hc", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        endpoints.MapGrpcHealthChecksService();
+        endpoints.MapGrpcService<InventoryService>();
+        endpoints.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+    });
 
     app.Run();
 
